@@ -43,7 +43,7 @@ const Cart = () => {
 
   const removeItem = (id: number) => {
     setCartItems(items => items.filter(item => item.id !== id));
-  };
+  };l
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const savings = cartItems.reduce((sum, item) => {
