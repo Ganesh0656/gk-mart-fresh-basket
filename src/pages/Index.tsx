@@ -5,6 +5,11 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import basmatiRice from "@/assets/basmati-rice.jpg";
+import vegetablesCombo from "@/assets/vegetables-combo.jpg";
+import cookingOil from "@/assets/cooking-oil.jpg";
+import cleaningKit from "@/assets/cleaning-kit.jpg";
+import heroGrocery from "@/assets/hero-grocery.jpg";
 
 const Index = () => {
   // Sample featured products data
@@ -14,7 +19,7 @@ const Index = () => {
       name: "Organic Basmati Rice 5kg",
       price: 899,
       originalPrice: 1200,
-      image: "/placeholder.svg",
+      image: basmatiRice,
       rating: 4.5,
       reviews: 324,
       category: "Rice & Grains",
@@ -24,7 +29,7 @@ const Index = () => {
       id: 2,
       name: "Fresh Vegetables Combo Pack",
       price: 249,
-      image: "/placeholder.svg",
+      image: vegetablesCombo,
       rating: 4.3,
       reviews: 156,
       category: "Vegetables"
@@ -34,7 +39,7 @@ const Index = () => {
       name: "Premium Cooking Oil 1L",
       price: 189,
       originalPrice: 220,
-      image: "/placeholder.svg",
+      image: cookingOil,
       rating: 4.6,
       reviews: 892,
       category: "Cooking Oil",
@@ -44,7 +49,7 @@ const Index = () => {
       id: 4,
       name: "Household Cleaning Kit",
       price: 299,
-      image: "/placeholder.svg",
+      image: cleaningKit,
       rating: 4.2,
       reviews: 78,
       category: "Home Care"
@@ -120,7 +125,7 @@ const Index = () => {
             <div className="relative animate-scale-in">
               <div className="relative">
                 <img
-                  src="/placeholder.svg"
+                  src={heroGrocery}
                   alt="Fresh groceries"
                   className="w-full h-96 object-cover rounded-2xl shadow-2xl"
                 />
