@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, Filter, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,103 +7,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import basmatiRice from "@/assets/basmati-rice.jpg";
-import vegetablesCombo from "@/assets/vegetables-combo.jpg";
-import cookingOil from "@/assets/cooking-oil.jpg";
-import cleaningKit from "@/assets/cleaning-kit.jpg";
+import { products, categories } from "@/data/products";
 
 const Products = () => {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("name");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const products = [
-    {
-      id: 1,
-      name: "Organic Basmati Rice 5kg",
-      price: 899,
-      originalPrice: 1200,
-      image: basmatiRice,
-      rating: 4.5,
-      reviews: 324,
-      category: "Rice & Grains",
-      discount: 25
-    },
-    {
-      id: 2,
-      name: "Fresh Vegetables Combo Pack",
-      price: 249,
-      image: vegetablesCombo,
-      rating: 4.3,
-      reviews: 156,
-      category: "Vegetables"
-    },
-    {
-      id: 3,
-      name: "Premium Cooking Oil 1L",
-      price: 189,
-      originalPrice: 220,
-      image: cookingOil,
-      rating: 4.6,
-      reviews: 892,
-      category: "Cooking Oil",
-      discount: 14
-    },
-    {
-      id: 4,
-      name: "Household Cleaning Kit",
-      price: 299,
-      image: cleaningKit,
-      rating: 4.2,
-      reviews: 78,
-      category: "Home Care"
-    },
-    {
-      id: 5,
-      name: "Premium Basmati Rice 10kg",
-      price: 1599,
-      originalPrice: 1800,
-      image: basmatiRice,
-      rating: 4.7,
-      reviews: 445,
-      category: "Rice & Grains",
-      discount: 11
-    },
-    {
-      id: 6,
-      name: "Organic Vegetables Bundle",
-      price: 399,
-      image: vegetablesCombo,
-      rating: 4.4,
-      reviews: 267,
-      category: "Vegetables"
-    },
-    {
-      id: 7,
-      name: "Cold Pressed Oil 500ml",
-      price: 145,
-      originalPrice: 165,
-      image: cookingOil,
-      rating: 4.5,
-      reviews: 156,
-      category: "Cooking Oil",
-      discount: 12
-    },
-    {
-      id: 8,
-      name: "Complete Home Care Set",
-      price: 599,
-      originalPrice: 750,
-      image: cleaningKit,
-      rating: 4.3,
-      reviews: 234,
-      category: "Home Care",
-      discount: 20
+  useEffect(() => {
+    const searchFromUrl = searchParams.get('search');
+    if (searchFromUrl) {
+      setSearchTerm(searchFromUrl);
     }
-  ];
-
-  const categories = ["all", "Rice & Grains", "Vegetables", "Cooking Oil", "Home Care"];
+  }, [searchParams]);
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());

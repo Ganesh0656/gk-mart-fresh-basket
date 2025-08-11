@@ -1,13 +1,24 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/CartContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { cartCount } = useCart();
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 glass-effect border-b">
@@ -31,7 +42,7 @@ const Header = () => {
 
           {/* Search Bar */}
           <div className="hidden md:flex items-center space-x-4 flex-1 max-w-md mx-8">
-            <div className="relative flex-1">
+            <form onSubmit={handleSearch} className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 placeholder="Search products..."
@@ -39,7 +50,7 @@ const Header = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 input-field"
               />
-            </div>
+            </form>
           </div>
 
           {/* Action Buttons */}
@@ -47,7 +58,11 @@ const Header = () => {
             <Link to="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">2</span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
               </Button>
             </Link>
             <Link to="/login">
@@ -72,7 +87,7 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden border-t border-border py-4 animate-fade-in">
             <div className="flex flex-col space-y-4">
-              <div className="relative">
+              <form onSubmit={handleSearch} className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
                   placeholder="Search products..."
@@ -80,7 +95,7 @@ const Header = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 input-field"
                 />
-              </div>
+              </form>
               <nav className="flex flex-col space-y-2">
                 <Link to="/" className="text-foreground hover:text-primary transition-colors py-2">Home</Link>
                 <Link to="/products" className="text-foreground hover:text-primary transition-colors py-2">Products</Link>

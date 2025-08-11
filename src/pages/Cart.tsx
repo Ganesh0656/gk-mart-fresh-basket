@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,44 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import basmatiRice from "@/assets/basmati-rice.jpg";
-import vegetablesCombo from "@/assets/vegetables-combo.jpg";
+import { useCart } from "@/context/CartContext";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Organic Basmati Rice 5kg",
-      price: 899,
-      originalPrice: 1200,
-      image: basmatiRice,
-      quantity: 2,
-      discount: 25
-    },
-    {
-      id: 2,
-      name: "Fresh Vegetables Combo Pack",
-      price: 249,
-      image: vegetablesCombo,
-      quantity: 1
-    }
-  ]);
-
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeItem(id);
-      return;
-    }
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };l
+  const { cartItems, updateQuantity, removeFromCart } = useCart();
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const savings = cartItems.reduce((sum, item) => {
@@ -137,7 +102,7 @@ const Cart = () => {
                           <Button
                             variant="outline"
                             size="icon"
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeFromCart(item.id)}
                             className="h-8 w-8"
                           >
                             <Trash2 className="w-4 h-4" />
