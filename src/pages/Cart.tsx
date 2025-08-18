@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import NavigationBar from "@/components/NavigationBar";
 import { useCart } from "@/context/CartContext";
 
 const Cart = () => {
@@ -21,18 +22,22 @@ const Cart = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen pb-20">
         <Header />
         <div className="section-padding">
           <div className="container-width">
-            <div className="text-center py-16">
-              <ShoppingBag className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-foreground mb-4">Your cart is empty</h2>
-              <p className="text-muted-foreground mb-8">
-                Looks like you haven't added any items to your cart yet.
-              </p>
+            <div className="text-center py-16 space-y-6">
+              <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto transition-all duration-500 hover:scale-110 animate-scale-in">
+                <ShoppingBag className="w-12 h-12 text-muted-foreground" />
+              </div>
+              <div className="space-y-2 animate-fade-in">
+                <h2 className="text-2xl font-bold text-foreground transition-all duration-500 hover:scale-105">Your cart is empty</h2>
+                <p className="text-muted-foreground transition-all duration-500 hover:text-foreground">
+                  Looks like you haven't added any items to your cart yet.
+                </p>
+              </div>
               <Link to="/products">
-                <Button className="btn-primary">
+                <Button className="btn-primary transition-all duration-300 hover:scale-105 hover:shadow-lg animate-fade-in">
                   Start Shopping
                 </Button>
               </Link>
@@ -40,34 +45,35 @@ const Cart = () => {
           </div>
         </div>
         <Footer />
+        <NavigationBar />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20">
       <Header />
       
       <div className="section-padding">
         <div className="container-width">
           {/* Page Header */}
-          <div className="flex items-center gap-4 mb-8">
+          <div className="flex items-center gap-4 mb-8 animate-fade-in">
             <Link to="/products">
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" className="transition-all duration-300 hover:scale-105">
                 <ArrowLeft className="w-4 h-4" />
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Shopping Cart</h1>
-              <p className="text-muted-foreground">{cartItems.length} items in your cart</p>
+              <h1 className="text-3xl font-bold text-foreground transition-all duration-500 hover:scale-105">Shopping Cart</h1>
+              <p className="text-muted-foreground transition-all duration-500 hover:text-foreground">{cartItems.length} items in your cart</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
-              {cartItems.map((item) => (
-                <Card key={item.id}>
+              {cartItems.map((item, index) => (
+                <Card key={item.id} className="transition-all duration-300 hover:shadow-lg hover:scale-[1.02] animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
                   <CardContent className="p-6">
                     <div className="flex flex-col sm:flex-row gap-4">
                       {/* Product Image */}
@@ -75,7 +81,7 @@ const Cart = () => {
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
                         />
                       </div>
 
@@ -83,7 +89,7 @@ const Cart = () => {
                       <div className="flex-1 space-y-2">
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                           <div>
-                            <h3 className="font-semibold text-foreground">{item.name}</h3>
+                            <h3 className="font-semibold text-foreground transition-colors duration-300 hover:text-primary">{item.name}</h3>
                             <div className="flex items-center gap-2 mt-1">
                               <span className="text-lg font-bold text-primary">₹{item.price}</span>
                               {item.originalPrice && (
@@ -92,7 +98,7 @@ const Cart = () => {
                                 </span>
                               )}
                               {item.discount && (
-                                <span className="text-xs bg-destructive text-destructive-foreground px-2 py-1 rounded">
+                                <span className="text-xs bg-destructive text-destructive-foreground px-2 py-1 rounded animate-scale-in">
                                   {item.discount}% OFF
                                 </span>
                               )}
@@ -103,7 +109,7 @@ const Cart = () => {
                             variant="outline"
                             size="icon"
                             onClick={() => removeFromCart(item.id)}
-                            className="h-8 w-8"
+                            className="h-8 w-8 text-red-600 hover:text-red-700 transition-all duration-300 hover:scale-110"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -116,7 +122,7 @@ const Cart = () => {
                               variant="outline"
                               size="icon"
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="h-8 w-8"
+                              className="h-8 w-8 transition-all duration-300 hover:scale-110"
                             >
                               <Minus className="w-3 h-3" />
                             </Button>
@@ -125,7 +131,7 @@ const Cart = () => {
                               variant="outline"
                               size="icon"
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="h-8 w-8"
+                              className="h-8 w-8 transition-all duration-300 hover:scale-110"
                             >
                               <Plus className="w-3 h-3" />
                             </Button>
@@ -146,9 +152,9 @@ const Cart = () => {
 
             {/* Order Summary */}
             <div className="space-y-6">
-              <Card>
+              <Card className="sticky top-24 transition-all duration-300 hover:shadow-lg animate-fade-in">
                 <CardHeader>
-                  <CardTitle>Order Summary</CardTitle>
+                  <CardTitle className="transition-colors duration-300 hover:text-primary">Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between">
@@ -157,7 +163,7 @@ const Cart = () => {
                   </div>
                   
                   {savings > 0 && (
-                    <div className="flex justify-between text-green-600">
+                    <div className="flex justify-between text-green-600 animate-scale-in">
                       <span>Savings</span>
                       <span className="font-medium">-₹{savings.toFixed(2)}</span>
                     </div>
@@ -171,7 +177,7 @@ const Cart = () => {
                   </div>
                   
                   {subtotal < 500 && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground animate-fade-in">
                       Add ₹{(500 - subtotal).toFixed(2)} more for free delivery
                     </p>
                   )}
@@ -184,7 +190,7 @@ const Cart = () => {
                   </div>
                   
                   <Link to="/checkout">
-                    <Button className="w-full btn-primary">
+                    <Button className="w-full btn-primary transition-all duration-300 hover:scale-105 hover:shadow-lg">
                       Proceed to Checkout
                     </Button>
                   </Link>
@@ -192,14 +198,14 @@ const Cart = () => {
               </Card>
 
               {/* Delivery Info */}
-              <Card>
+              <Card className="transition-all duration-300 hover:shadow-lg animate-fade-in" style={{animationDelay: '0.2s'}}>
                 <CardContent className="p-4">
                   <div className="text-sm space-y-2">
-                    <p className="font-medium text-foreground">Delivery Information</p>
-                    <p className="text-muted-foreground">
+                    <p className="font-medium text-foreground transition-colors duration-300 hover:text-primary">Delivery Information</p>
+                    <p className="text-muted-foreground transition-colors duration-300 hover:text-foreground">
                       Free delivery on orders above ₹500
                     </p>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground transition-colors duration-300 hover:text-foreground">
                       Expected delivery: Tomorrow, 10 AM - 6 PM
                     </p>
                   </div>
@@ -211,6 +217,7 @@ const Cart = () => {
       </div>
 
       <Footer />
+      <NavigationBar />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import NavigationBar from "@/components/NavigationBar";
 import ProductCard from "@/components/ProductCard";
 import { products, categories } from "@/data/products";
 
@@ -43,24 +44,24 @@ const Products = () => {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20">
       <Header />
       
       <div className="section-padding">
         <div className="container-width">
           {/* Page Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4 transition-all duration-500 hover:scale-105">
               All Products
             </h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto transition-all duration-500 hover:text-foreground">
               Discover our complete range of fresh groceries, household essentials, and quality products
             </p>
           </div>
 
           {/* Filters and Search */}
           <div className="mb-8 space-y-4">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
+            <div className="flex flex-col md:flex-row gap-4 items-center bg-muted/20 p-4 rounded-lg">
               {/* Search */}
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -68,13 +69,13 @@ const Products = () => {
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 transition-all duration-300 focus:scale-105"
                 />
               </div>
 
               {/* Category Filter */}
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] transition-all duration-300 hover:scale-105">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -88,7 +89,7 @@ const Products = () => {
 
               {/* Sort */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] transition-all duration-300 hover:scale-105">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -105,6 +106,7 @@ const Products = () => {
                   variant={viewMode === "grid" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("grid")}
+                  className="transition-all duration-300 hover:scale-105"
                 >
                   <Grid className="w-4 h-4" />
                 </Button>
@@ -112,6 +114,7 @@ const Products = () => {
                   variant={viewMode === "list" ? "default" : "outline"}
                   size="icon"
                   onClick={() => setViewMode("list")}
+                  className="transition-all duration-300 hover:scale-105"
                 >
                   <List className="w-4 h-4" />
                 </Button>
@@ -121,7 +124,7 @@ const Products = () => {
 
           {/* Results Count */}
           <div className="mb-6">
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground transition-all duration-300 hover:text-foreground">
               Showing {sortedProducts.length} of {products.length} products
             </p>
           </div>
@@ -133,7 +136,7 @@ const Products = () => {
               : "grid-cols-1"
           }`}>
             {sortedProducts.map((product, index) => (
-              <div key={product.id} className="animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={product.id} className="animate-fade-in transform transition-all duration-500 hover:scale-105 hover:-translate-y-2" style={{animationDelay: `${index * 0.1}s`}}>
                 <ProductCard {...product} />
               </div>
             ))}
@@ -141,14 +144,14 @@ const Products = () => {
 
           {/* No Results */}
           {sortedProducts.length === 0 && (
-            <div className="text-center py-12">
+            <div className="text-center py-12 space-y-4">
               <p className="text-muted-foreground text-lg">No products found matching your criteria.</p>
               <Button 
                 onClick={() => {
                   setSearchTerm("");
                   setSelectedCategory("all");
                 }}
-                className="mt-4"
+                className="mt-4 transition-all duration-300 hover:scale-105"
               >
                 Clear Filters
               </Button>
@@ -158,6 +161,7 @@ const Products = () => {
       </div>
 
       <Footer />
+      <NavigationBar />
     </div>
   );
 };
