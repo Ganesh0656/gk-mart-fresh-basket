@@ -1,11 +1,12 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -16,30 +17,45 @@ const Login = () => {
     password: "",
     confirmPassword: ""
   });
-  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     
-    if (isSignUp) {
-      if (formData.password !== formData.confirmPassword) {
-        toast({
-          title: "Error",
-          description: "Passwords don't match",
-          variant: "destructive"
-        });
-        return;
+    try {
+      if (isSignUp) {
+        if (formData.password !== formData.confirmPassword) {
+          toast.error("Passwords do not match!");
+          return;
+        }
+        if (formData.password.length < 6) {
+          toast.error("Password must be at least 6 characters long!");
+          return;
+        }
+        
+        const { error } = await signUp(formData.email, formData.password, formData.name);
+        if (!error) {
+          setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+        }
+      } else {
+        const { error } = await signIn(formData.email, formData.password);
+        if (!error) {
+          navigate('/');
+        }
       }
-      toast({
-        title: "Account Created!",
-        description: "Welcome to Gk-Mart! Please sign in to continue.",
-      });
-      setIsSignUp(false);
-    } else {
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -134,8 +150,12 @@ const Login = () => {
               </div>
             )}
 
-            <Button type="submit" className="w-full btn-primary">
-              {isSignUp ? "Create Account" : "Sign In"}
+            <Button 
+              type="submit" 
+              className="w-full btn-primary"
+              disabled={loading}
+            >
+              {loading ? "Please wait..." : (isSignUp ? "Create Account" : "Sign In")}
             </Button>
           </form>
 
