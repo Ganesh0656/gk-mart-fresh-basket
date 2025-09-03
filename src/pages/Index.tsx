@@ -6,56 +6,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NavigationBar from "@/components/NavigationBar";
 import ProductCard from "@/components/ProductCard";
-import basmatiRice from "@/assets/basmati-rice.jpg";
-import vegetablesCombo from "@/assets/vegetables-combo.jpg";
-import cookingOil from "@/assets/cooking-oil.jpg";
-import cleaningKit from "@/assets/cleaning-kit.jpg";
+import { useProducts } from "@/hooks/useProducts";
 import heroGrocery from "@/assets/hero-grocery.jpg";
 
 const Index = () => {
-  // Sample featured products data
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Organic Basmati Rice 5kg",
-      price: 899,
-      originalPrice: 1200,
-      image: basmatiRice,
-      rating: 4.5,
-      reviews: 324,
-      category: "Rice & Grains",
-      discount: 25
-    },
-    {
-      id: 2,
-      name: "Fresh Vegetables Combo Pack",
-      price: 249,
-      image: vegetablesCombo,
-      rating: 4.3,
-      reviews: 156,
-      category: "Vegetables"
-    },
-    {
-      id: 3,
-      name: "Premium Cooking Oil 1L",
-      price: 189,
-      originalPrice: 220,
-      image: cookingOil,
-      rating: 4.6,
-      reviews: 892,
-      category: "Cooking Oil",
-      discount: 14
-    },
-    {
-      id: 4,
-      name: "Household Cleaning Kit",
-      price: 299,
-      image: cleaningKit,
-      rating: 4.2,
-      reviews: 78,
-      category: "Home Care"
-    }
-  ];
+  const { products, loading } = useProducts();
+  
+  // Get featured products (first 4 products for now)
+  const featuredProducts = products?.slice(0, 4) || [];
 
   const features = [
     {
@@ -150,15 +108,45 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product, index) => (
-              <div 
-                key={product.id} 
-                className="animate-fade-in transform transition-all duration-500 hover:scale-105 hover:-translate-y-2" 
-                style={{animationDelay: `${index * 0.15}s`}}
-              >
-                <ProductCard {...product} />
+            {loading ? (
+              // Loading skeleton
+              Array.from({ length: 4 }).map((_, index) => (
+                <div 
+                  key={index}
+                  className="animate-pulse space-y-4"
+                >
+                  <div className="h-48 bg-muted rounded-lg"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))
+            ) : featuredProducts.length > 0 ? (
+              featuredProducts.map((product, index) => (
+                <div 
+                  key={product.id} 
+                  className="animate-fade-in transform transition-all duration-500 hover:scale-105 hover:-translate-y-2" 
+                  style={{animationDelay: `${index * 0.15}s`}}
+                >
+                  <ProductCard 
+                    id={Number(product.id)}
+                    name={product.name}
+                    price={Number(product.price)}
+                    originalPrice={product.original_price ? Number(product.original_price) : undefined}
+                    image={product.image_url || heroGrocery}
+                    rating={Number(product.rating) || 0}
+                    reviews={product.review_count || 0}
+                    category={product.category}
+                    discount={product.original_price ? Math.round(((Number(product.original_price) - Number(product.price)) / Number(product.original_price)) * 100) : undefined}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-muted-foreground">No featured products available at the moment.</p>
               </div>
-            ))}
+            )}
           </div>
 
           <div className="text-center mt-12">
