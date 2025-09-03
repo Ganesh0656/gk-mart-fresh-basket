@@ -1,15 +1,17 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { cartCount } = useCart();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
@@ -65,7 +67,16 @@ const Header = () => {
                 )}
               </Button>
             </Link>
-            <Link to="/login">
+            
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="ghost" size="icon">
+                  <Settings className="w-5 h-5" />
+                </Button>
+              </Link>
+            )}
+            
+            <Link to={user ? "/profile" : "/login"}>
               <Button variant="ghost" size="icon">
                 <User className="w-5 h-5" />
               </Button>
